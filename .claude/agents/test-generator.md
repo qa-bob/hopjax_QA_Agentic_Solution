@@ -1,3 +1,10 @@
+---
+name: test-generator
+description: Reads a populated site.config.json and generates site-specific Playwright + TypeScript test files (POM-based) for functionality not covered by the shared generic suites. Use when a site has unique features, the client requests extra coverage, or generic selectors fail and site-specific locators are needed.
+tools: Read, Write, Edit, Glob, Grep, Bash
+model: inherit
+---
+
 # Agent: test-generator
 
 ## Role

@@ -1,3 +1,7 @@
+---
+description: Run the @smoke test suite and display a clean pass/fail summary with suggested fixes for failures.
+---
+
 # /run-smoke
 
 Run the smoke test suite and display a clean pass/fail summary.

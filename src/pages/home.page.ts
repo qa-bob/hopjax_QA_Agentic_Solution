@@ -8,6 +8,11 @@
 import { type Locator } from '@playwright/test';
 import { BasePage } from '@pages/base.page';
 
+export interface BlogTeaser {
+  title: string;
+  href: string;
+}
+
 export class HomePage extends BasePage {
   // ── Hero / above-the-fold ───────────────────────────────────────────────────
 
@@ -112,5 +117,124 @@ export class HomePage extends BasePage {
     } catch {
       return false;
     }
+  }
+
+  // ── "3 Easy Steps" process ──────────────────────────────────────────────────
+
+  /**
+   * Return the text of each step in the "Find Wellness In 3 Easy Steps" section.
+   */
+  async getProcessSteps(): Promise<string[]> {
+    const section = this.page.locator('section, div').filter({ hasText: /3 easy steps/i }).first();
+    if (await section.count() === 0) return [];
+
+    const steps = section.locator('h3, h4, [class*="step"]');
+    const count = await steps.count();
+    const results: string[] = [];
+
+    for (let i = 0; i < count; i++) {
+      const text = (await steps.nth(i).textContent())?.trim();
+      if (text) results.push(text);
+    }
+
+    return results;
+  }
+
+  // ── Benefits section ─────────────────────────────────────────────────────────
+
+  /** Returns true if the "Benefits of HopJax" section is present. */
+  async hasBenefitsSection(): Promise<boolean> {
+    const heading = this.page.getByRole('heading', { name: /benefits of hopjax/i });
+    return (await heading.count()) > 0;
+  }
+
+  // ── Blog / news teasers ──────────────────────────────────────────────────────
+
+  /**
+   * Return the title and href of each article teaser in the
+   * "Latest News and Resources" section.
+   */
+  async getBlogTeasers(): Promise<BlogTeaser[]> {
+    const section = this.page.locator('section, div').filter({ hasText: /latest news and resources/i }).first();
+    if (await section.count() === 0) return [];
+
+    const links = section.locator('a[href*="/resource-center/blog"], article a, a:has(h3), a:has(h4)');
+    const count = await links.count();
+    const results: BlogTeaser[] = [];
+
+    for (let i = 0; i < count; i++) {
+      const link = links.nth(i);
+      const title = (await link.textContent())?.trim();
+      const href = await link.getAttribute('href');
+      if (title && href) results.push({ title, href });
+    }
+
+    return results;
+  }
+
+  // ── Newsletter signup ("Join Our Mailing List") ─────────────────────────────
+
+  /**
+   * Locate the mailing-list signup form. Uses `.last()` since any header
+   * search form would match the same "form with an email-like input" filter
+   * before the actual newsletter form further down the page.
+   */
+  private getNewsletterForm(): Locator {
+    return this.page.locator('form').filter({
+      has: this.page.locator('input[type="email"], input[name*="email" i]'),
+    }).last();
+  }
+
+  /** Returns true if the newsletter signup form is present. */
+  async hasNewsletterForm(): Promise<boolean> {
+    return (await this.getNewsletterForm().count()) > 0;
+  }
+
+  /**
+   * Fill (but do NOT submit) the newsletter email field.
+   */
+  async fillNewsletterEmail(email: string): Promise<void> {
+    const emailField = this.getNewsletterForm()
+      .locator('input[type="email"], input[name*="email" i]')
+      .first();
+    await emailField.fill(email);
+  }
+
+  /** Return the current value of the newsletter email field. */
+  async getNewsletterEmailValue(): Promise<string> {
+    const emailField = this.getNewsletterForm()
+      .locator('input[type="email"], input[name*="email" i]')
+      .first();
+    return emailField.inputValue();
+  }
+
+  // ── Primary CTAs & cross-portal links ───────────────────────────────────────
+
+  /** Return the href of the "Begin Your Journey" CTA, or null if absent. */
+  async getPrimaryCtaHref(): Promise<string | null> {
+    const cta = this.page.locator('a, button').filter({ hasText: /begin your journey/i }).first();
+    if (await cta.count() === 0) return null;
+    return cta.getAttribute('href');
+  }
+
+  /** Return the href of the "Get Listed" (provider signup) CTA, or null if absent. */
+  async getGetListedHref(): Promise<string | null> {
+    const cta = this.page.locator('a, button').filter({ hasText: /get listed/i }).first();
+    if (await cta.count() === 0) return null;
+    return cta.getAttribute('href');
+  }
+
+  /** Return the href of the "For Patients Login" link, or null if absent. */
+  async getPatientLoginHref(): Promise<string | null> {
+    const link = this.page.locator('a').filter({ hasText: /patients? login/i }).first();
+    if (await link.count() === 0) return null;
+    return link.getAttribute('href');
+  }
+
+  /** Return the href of the "For Providers Login" link, or null if absent. */
+  async getProviderLoginHref(): Promise<string | null> {
+    const link = this.page.locator('a').filter({ hasText: /providers? login/i }).first();
+    if (await link.count() === 0) return null;
+    return link.getAttribute('href');
   }
 }

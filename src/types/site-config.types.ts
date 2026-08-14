@@ -80,7 +80,10 @@ export function loadSiteConfig(configDir: string = process.cwd()): SiteConfig {
     return { ...DEFAULT_CONFIG };
   }
 
-  const raw = fs.readFileSync(configPath, 'utf-8');
+  // Strip a leading UTF-8 BOM — Windows editors commonly save JSON with one,
+  // and a BOM character makes JSON.parse throw.
+  const BOM = String.fromCharCode(0xfeff);
+  const raw = fs.readFileSync(configPath, 'utf-8').replace(new RegExp(`^${BOM}`), '');
 
   let parsed: Partial<SiteConfig>;
   try {

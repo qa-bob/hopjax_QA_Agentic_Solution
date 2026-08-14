@@ -100,6 +100,7 @@ test.describe('Site Availability @smoke', () => {
     // Meta description check
     const metaDescription = await page
       .locator('meta[name="description"]')
+      .first()
       .getAttribute('content');
 
     // Meta description is a best-practice, not hard requirement — warn if absent

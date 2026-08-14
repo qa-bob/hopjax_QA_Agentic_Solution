@@ -1,11 +1,20 @@
 ﻿{
     "name":  "Hopjax",
-    "url":  "http://hopjax.com",
-    "description":  "",
-    "industry":  "",
+    "url":  "https://hopjax.com",
+    "description":  "HopJax is an online directory and appointment-booking platform that connects patients with mental health providers.",
+    "industry":  "Mental Health Care",
     "hasContactForm":  true,
     "expectedNavItems":  [
-
+                             "How It Works",
+                             "FAQ",
+                             "Types of Therapy",
+                             "National Hotlines",
+                             "Support Groups",
+                             "News and Resource Blog",
+                             "About",
+                             "Contact",
+                             "Get Listed",
+                             "Claim Your Listing"
                          ],
     "viewports":  [
                       "desktop",

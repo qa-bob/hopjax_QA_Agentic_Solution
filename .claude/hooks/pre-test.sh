@@ -10,6 +10,19 @@
 
 set -euo pipefail
 
+# When invoked as a Claude Code PreToolUse hook, JSON describing the tool call
+# arrives on stdin. Only run the reachability check when the Bash command
+# actually runs the test suite — skip it for unrelated commands (ls, git, etc).
+if [[ ! -t 0 ]]; then
+  HOOK_INPUT=$(cat)
+  if [[ -n "$HOOK_INPUT" ]]; then
+    HOOK_COMMAND=$(echo "$HOOK_INPUT" | grep -o '"command"[[:space:]]*:[[:space:]]*"[^"]*"' | head -1 | sed 's/.*: *"//;s/"$//')
+    if [[ -n "$HOOK_COMMAND" ]] && ! echo "$HOOK_COMMAND" | grep -Eiq 'playwright test|npm (run )?test'; then
+      exit 0
+    fi
+  fi
+fi
+
 TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
 CONFIG_FILE="site.config.json"
 

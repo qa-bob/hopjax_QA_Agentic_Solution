@@ -1,3 +1,8 @@
+---
+description: Analyze a live website and produce a fully-populated site.config.json. Use when onboarding a new site or refreshing an outdated config.
+argument-hint: "[url]"
+---
+
 # /analyze-site
 
 Analyze a live website and produce a fully-populated `site.config.json`.

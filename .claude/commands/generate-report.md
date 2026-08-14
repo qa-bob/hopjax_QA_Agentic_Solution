@@ -1,3 +1,7 @@
+---
+description: Parse the latest Playwright test results and display a structured pass/fail/flaky summary with suggested next steps.
+---
+
 # /generate-report
 
 Open the Playwright HTML report and display a structured summary of test results.
