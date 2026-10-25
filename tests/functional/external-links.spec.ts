@@ -30,19 +30,13 @@ test.describe('External CTAs and Portal Links @functional', () => {
 
   test('patient login link points to the patient portal @functional', async ({ homePage }) => {
     const href = await homePage.getPatientLoginHref();
-    if (!href) {
-      console.warn('[functional] No "For Patients Login" link found — homepage markup may have changed.');
-      return;
-    }
+    test.skip(!href, 'No "For Patients Login" link found');
     expect(href, 'Patient login link should point to client.hopjax.com').toContain('client.hopjax.com');
   });
 
   test('provider login link points to the provider portal @functional', async ({ homePage }) => {
     const href = await homePage.getProviderLoginHref();
-    if (!href) {
-      console.warn('[functional] No "For Providers Login" link found — homepage markup may have changed.');
-      return;
-    }
+    test.skip(!href, 'No "For Providers Login" link found');
     expect(href, 'Provider login link should point to admin.hopjax.com').toContain('admin.hopjax.com');
   });
 });
