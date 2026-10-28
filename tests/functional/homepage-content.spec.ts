@@ -36,10 +36,7 @@ test.describe('Homepage Content @functional', () => {
   test('"Latest News and Resources" section lists blog teasers @functional', async ({ homePage }) => {
     const teasers = await homePage.getBlogTeasers();
 
-    if (teasers.length === 0) {
-      console.warn('[functional] No blog teaser links found — homepage markup may have changed.');
-      return;
-    }
+    test.skip(teasers.length === 0, 'No blog teaser links found');
 
     for (const teaser of teasers) {
       expect(teaser.title.length, `Blog teaser should have a title: ${JSON.stringify(teaser)}`).toBeGreaterThan(0);
